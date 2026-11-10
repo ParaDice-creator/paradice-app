@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParaDice Mini App</title>
+    <!-- Подключаем библиотеку Telegram Web App -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            padding: 20px;
+            margin: 0;
+            text-align: center;
+        }
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .loyalty-card {
+            background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .stamps {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+            font-size: 24px;
+        }
+        .btn {
+            background-color: var(--tg-theme-button-color, #3390ec);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            border-radius: 10px;
+            padding: 15px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .btn:active {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">🎲 ParaDice</div>
+
+    <div class="loyalty-card">
+        <h3 id="user-greeting">Ваша карта лояльности</h3>
+        <p>Каждая 6-я игротека — бесплатно!</p>
+        <div class="stamps">
+            <span>🔵</span>
+            <span>🔵</span>
+            <span>⚪</span>
+            <span>⚪</span>
+            <span>⚪</span>
+            <span>🎁</span>
+        </div>
+        <p><small>Осталось 3 штампа до бесплатного входа</small></p>
+    </div>
+
+    <button class="btn" id="book-btn">Записаться на игротеку (3000 ₸)</button>
+    <button class="btn" style="background-color: transparent; color: var(--tg-theme-button-color); border: 2px solid var(--tg-theme-button-color);" id="close-btn">Закрыть</button>
+
+    <script>
+        // Инициализация Telegram Web App
+        let tg = window.Telegram.WebApp;
+        tg.expand(); // Разворачиваем на полный экран
+
+        // Приветствуем пользователя по имени, если данные доступны
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            document.getElementById('user-greeting').innerText = `Привет, ${tg.initDataUnsafe.user.first_name}!`;
+        }
+
+        // Обработка кнопки записи
+        document.getElementById('book-btn').addEventListener('click', function() {
+            // Отправляем данные обратно в бот (например, в PuzzleBot)
+            let data = JSON.stringify({ action: 'book_session', price: 3000 });
+            tg.sendData(data); 
+            // После отправки данных Telegram автоматически закроет Mini App
+        });
+
+        // Обработка кнопки закрытия
+        document.getElementById('close-btn').addEventListener('click', function() {
+            tg.close();
+        });
+    </script>
+</body>
+</html>
